@@ -5,6 +5,7 @@ header{
 }
 
 .navbar-nav a{
+    color: rgba(255,255,255, 0.5);
     text-decoration: none;
     padding-left: .5rem;
     padding-right: .5rem;

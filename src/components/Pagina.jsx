@@ -1,17 +1,34 @@
 import React from 'react';
-import { Container, Jumbotron } from 'react-bootstrap';
+import { Card, Container, Jumbotron } from 'react-bootstrap';
 
 export default(props) => {
+    var sectionStyle = {
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundImage: `url(https://wallpapercave.com/wp/wp1980778.jpg)`
+    }
     return(
-        <>
-            <Jumbotron>
+        <>  
+            <div style={sectionStyle}>
                 <Container>
-                    <h1>{props.titulo}</h1>
+                    <Card>
+                        <Card.Body>
+                            <Card.Title>
+                                <Jumbotron>
+                                    <h1>{props.titulo}</h1>
+                                </Jumbotron>
+                            </Card.Title>
+                            <Card.Text>
+                            {props.children}
+                            </Card.Text>
+                        </Card.Body>
+                        <Card.Footer className="footer">
+                            <small className="text-muted" style={{text:'center'}}>© Copyright 2020 - Daniel O. Aragão</small>
+                        </Card.Footer>
+                    </Card>
                 </Container>
-            </Jumbotron>
-            <Container>
-                {props.children}
-            </Container>
+                <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+            </div>
         </>
     )
 }

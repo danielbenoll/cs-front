@@ -6,25 +6,25 @@ import csApi from '../../services/csApi';
 
 export default() => {
 
-    const [classes, setClasses] = useState([])
+    const [mapas, setMapas] = useState([])
     useEffect(()=>{
 
-        csApi.get('/classes').then(results => {
-            setClasses(results.data.data)
+        csApi.get('/mapas').then(results => {
+            setMapas(results.data.data)
         })
     
     }, [])
     
 
-    // console.log(classes)
+    console.log(mapas[0]?.fotos[0].foto)
 
     return(
-        <Pagina titulo="Classes">
+        <Pagina titulo="Mapas">
             <Row>
-                {classes.map(item => (
-                    <Col md={6}>
-                        <Cartao titulo={item.lado} foto={item.img} tamanhoImg={536}>
-                            {item.descricao}
+                {mapas.map(item => (
+                    <Col md={3}>
+                        <Cartao titulo={item.lado} foto={item?.fotos[0].foto} tamanhoImg={200}>
+                            <strong>{item.nome}</strong>
                         </Cartao>
                     </Col>
                 ))}
