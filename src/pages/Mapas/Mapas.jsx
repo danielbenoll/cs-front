@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import Cartao from '../../components/Cartao';
 import Pagina from '../../components/Pagina';
 import csApi from '../../services/csApi';
@@ -16,16 +17,18 @@ export default() => {
     }, [])
     
 
-    console.log(mapas[0]?.fotos[0].foto)
+    console.log(mapas)
 
     return(
         <Pagina titulo="Mapas">
             <Row>
                 {mapas.map(item => (
                     <Col md={3}>
-                        <Cartao titulo={item.lado} foto={item?.fotos[0].foto} tamanhoImg={200}>
-                            <strong>{item.nome}</strong>
-                        </Cartao>
+                        <Link to={`/mapas/${item.id}`} style={{color: 'black'}}>
+                            <Cartao titulo={item.lado} foto={item?.fotos[0].foto} tamanhoImg={200}>
+                                <strong>{item.nome}</strong>
+                            </Cartao>
+                        </Link>
                     </Col>
                 ))}
             </Row>

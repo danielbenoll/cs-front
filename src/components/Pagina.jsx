@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Container, Jumbotron } from 'react-bootstrap';
+import { Card, Container, Image, Jumbotron } from 'react-bootstrap';
 
 export default(props) => {
     var sectionStyle = {
@@ -15,7 +15,7 @@ export default(props) => {
                         <Card.Body>
                             <Card.Title>
                                 <Jumbotron>
-                                    <h1>{props.titulo}</h1>
+                                    <h1>{props.titulo} <Image width="100" src={props.imagem} rounded /></h1>
                                 </Jumbotron>
                             </Card.Title>
                             <Card.Text>

@@ -22,7 +22,7 @@ export default() => {
 
     return(
         <Pagina titulo="Países">
-            <Slide lista={paises} foto="bandeira"/>
+            <Slide lista={paises} foto="bandeira" link='paises' label='local'/>
             <br/>
         </Pagina>
     )

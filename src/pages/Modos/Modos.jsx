@@ -7,37 +7,37 @@ import csApi from '../../services/csApi';
 
 export default() => {
 
-    const [classes, setClasses] = useState([])
+    const [modos, setModos] = useState([])
     useEffect(()=>{
 
-        csApi.get('/classes').then(results => {
-            setClasses(results.data.data)
+        csApi.get('/modos').then(results => {
+            setModos(results.data.data)
         })
     
     }, [])
     
 
-    console.log(classes)
+    console.log(modos)
 
     return(
-        <Pagina titulo="Classes">
-            <CardDeck>
-                {classes.map(item => (
-                    <Card>
-                        <Link to={`/classes/${item.id}`} style={{color: 'black'}}>
-                            <Card.Img variant="top" src={item.img} />
+        <Pagina titulo="Modos">
+                {modos.map(item => (
+                    <div>
+                        <Card>
                             <Card.Body>
+                                <Link to={`/modos/${item.id}`} style={{color: 'black'}}>
                                     <br/>
-                                    <Card.Title >{item.lado}</Card.Title>
+                                    <Card.Title >{item.modo}</Card.Title>
                                     <Card.Text>
                                         <hr/>
                                         {item.descricao}
                                     </Card.Text>
+                                </Link>
                             </Card.Body>
-                        </Link>
-                    </Card>
+                        </Card>
+                        <br/>
+                    </div>
                 ))}
-            </CardDeck>
         </Pagina>
     )
 }
