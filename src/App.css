@@ -1,47 +1,12 @@
-.App {
-  text-align: center;
+body {    
+  display: grid;    
+  min-height: 100vh;    
+  grid-template-columns: 1fr;    
+  grid-template-rows: 1fr ;    
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-.footer {
-  position: fixed;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  background-color: white;
-  color: black;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
-}
-
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.root{
+  background: url('https://a-static.besthdwallpaper.com/cs-go-papel-de-parede-1920x1080-21413_48.jpg') center fixed no-repeat;
+  grid-column: 1;    
+  grid-row: 1 ;   
 }

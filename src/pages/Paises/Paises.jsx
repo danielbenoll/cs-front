@@ -5,6 +5,7 @@ import Cartao from '../../components/Cartao';
 import Pagina from '../../components/Pagina';
 import Slide from '../../components/Slide';
 import csApi from '../../services/csApi';
+import '../../App.css';
 
 export default() => {
 

@@ -66,7 +66,7 @@ export default(props) => {
                                     </Popover>
                                 }
                                 >
-                                <Link to={`/modos/${item.id}`}><Button variant="secondary">{item.modo}</Button></Link>
+                                <Link className="mr-3" to={`/modos/${item.id}`}><Button variant="secondary">{item.modo}</Button></Link>
                                 </OverlayTrigger>
                             
                         ))}

@@ -18,13 +18,14 @@ import ArmamentoDetalhes from './pages/Armamentos/ArmamentoDetalhes';
 import Home from './pages/Home';
 
 export default() => {
+    
     return(
         <>
             <BrowserRouter>
                 <Cabecalho/>
                 <Switch>
 
-                    <Route exact path="/" component={Classes}/>
+                    <Route exact path="/" component={Home}/>
                     <Route exact path="/classes" component={Classes}/>
                     <Route exact path="/classes/:id" component={ClasseDetalhes}/>
                     <Route exact path="/armamentos" component={Armamentos}/>
