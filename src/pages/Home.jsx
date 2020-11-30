@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, Card, Container, Image, Modal, Nav, Row, Table } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Button, Card, Col, Container, Form, Image, Modal, Nav, Row, Tab, Table, Tabs } from 'react-bootstrap';
 import { Link, withRouter } from 'react-router-dom';
 import Input from '../components/forms/Input';
 import validator from '../validator/UsuarioValidator';
@@ -12,15 +12,33 @@ const Home = (props) => {
     const { register, handleSubmit, errors } = useForm()
     const reference = { register, validator, errors }
 
-    function enviarDados(data) {
+    function logar() {
+
+        const data={
+            email: document.getElementById('emailLogin').value,
+            password: document.getElementById('senhaLogin').value
+        }
 
         UsuarioService.login(data).then(results => {
+          console.log(results.data.token)
           login(results.data.token)
-        //   props.history.push('/login')
-        }).catch(error => {
-          console.log(error.response.data)
+          props.history.push('/classes')
         })
-      }
+    }
+    function cadastrar() {
+
+        const data={
+            username: document.getElementById('nome').value,
+            email: document.getElementById('email').value,
+            password: document.getElementById('senha').value
+        }
+
+        UsuarioService.create(data).then(results => {
+          console.log(results.data)
+          alert("Cadastrado com Sucesso!")
+          window.location.reload(true);
+        })
+    }
 
     function MyVerticallyCenteredModal(props) {
         return (
@@ -31,19 +49,68 @@ const Home = (props) => {
           >
             <Modal.Header closeButton>
               <Modal.Title id="contained-modal-title-vcenter">
-                Login
+                Entrar
               </Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              
-                <Input label="E-mail" name="email" referencia={reference} type='email'/>
-                <Input label="Senha" name="password" referencia={reference} type='password'/>
+                <Tabs defaultActiveKey="entrar" id="uncontrolled-tab-example" >
+                    <Tab className="mt-5" eventKey="entrar" title="Entrar">
+                        <Form>
+                            <Form.Group as={Row} controlId={'emailLogin'}>
+                                <Form.Label column sm={3} className="text-right">E-mail <span className="text-danger">*</span></Form.Label>
+                                <Col sm={9}>
+                                    <Form.Control type="email" name="email" />
+                                    <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
+                                </Col>
+                            </Form.Group>
 
+                            <Form.Group as={Row} controlId={'senhaLogin'}>
+                                <Form.Label column sm={3} className="text-right">Senha <span className="text-danger">*</span></Form.Label>
+                                <Col sm={9}>
+                                    <Form.Control type="password" name="senha" />
+                                    <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
+                                </Col>
+                            </Form.Group>
+
+                            <Modal.Footer className="mt-5">
+                                <Button variant="secondary" onClick={props.onHide}>Fechar</Button>
+                                <Button variant="danger" onClick={handleSubmit(logar)}>Logar</Button>
+                            </Modal.Footer>
+                        </Form>
+                    </Tab>
+                    <Tab className="mt-5" eventKey="cadastrar" title="Cadastrar">
+                        <Form>
+                            <Form.Group as={Row} controlId={'nome'}>
+                                <Form.Label column sm={3} className="text-right">Nome <span className="text-danger">*</span></Form.Label>
+                                <Col sm={9}>
+                                    <Form.Control type="text" name="nome" />
+                                    <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
+                                </Col>
+                            </Form.Group>
+
+                            <Form.Group as={Row} controlId={'email'}>
+                                <Form.Label column sm={3} className="text-right">E-mail <span className="text-danger">*</span></Form.Label>
+                                <Col sm={9}>
+                                    <Form.Control type="email" name="email" />
+                                    <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
+                                </Col>
+                            </Form.Group>
+
+                            <Form.Group as={Row} controlId={'senha'}>
+                                <Form.Label column sm={3} className="text-right">Senha <span className="text-danger">*</span></Form.Label>
+                                <Col sm={9}>
+                                    <Form.Control type="password" name="senha" />
+                                    <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
+                                </Col>
+                            </Form.Group>
+                            <Modal.Footer className="mt-5">
+                                <Button variant="secondary" onClick={props.onHide}>Fechar</Button>
+                                <Button variant="danger" onClick={handleSubmit(cadastrar)}>Cadastrar</Button>
+                            </Modal.Footer>
+                        </Form>
+                    </Tab>
+                </Tabs>
             </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={props.onHide}>Fechar</Button>
-              <Button variant="danger" onClick={handleSubmit(enviarDados)}>Logar</Button>
-            </Modal.Footer>
           </Modal>
         );
     }
@@ -66,7 +133,7 @@ const Home = (props) => {
                                     </Row>
                                     <br/>
                                     <Row className="justify-content-md-center">
-                                        <Button variant="danger" onClick={() => setModalShow(true)} style={{color : 'black'}}>LOGIN</Button>
+                                        <Button variant="danger" onClick={() => setModalShow(true)} style={{color : 'black'}}>Entrar</Button>
                                         <MyVerticallyCenteredModal
                                             show={modalShow}
                                             onHide={() => setModalShow(false)}

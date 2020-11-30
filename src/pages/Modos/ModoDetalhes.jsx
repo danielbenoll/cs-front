@@ -52,7 +52,7 @@ export default(props) => {
         }
     }
 
-    console.log(foto)
+    console.log(modo)
     return (
         <Pagina titulo={modo.modo}>
             {/* {modo.id && */}

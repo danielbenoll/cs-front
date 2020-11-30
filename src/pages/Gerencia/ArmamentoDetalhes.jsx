@@ -34,7 +34,7 @@ export default(props) => {
         
     }, [props])
     
-    console.log(armamento)
+    console.log(classe)
 
     return (
         <Pagina titulo={armamento.nome}>

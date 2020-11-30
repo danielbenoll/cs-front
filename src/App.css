@@ -10,3 +10,7 @@ body {
   grid-column: 1;    
   grid-row: 1 ;   
 }
+
+.nav-link{
+  color: black
+}

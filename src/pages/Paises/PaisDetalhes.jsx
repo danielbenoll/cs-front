@@ -56,7 +56,7 @@ export default(props) => {
             
         }
     }
-    
+    console.log(pais)
     return (
         <Pagina titulo={pais.local} imagem={pais.bandeira}>
             {foto.length>0 &&

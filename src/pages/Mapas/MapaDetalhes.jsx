@@ -38,7 +38,7 @@ export default(props) => {
         
     }, [props])
     
-    console.log(modos)
+    console.log(mapa)
 
     return (
         <Pagina titulo={mapa.nome}>

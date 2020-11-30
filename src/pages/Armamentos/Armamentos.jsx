@@ -10,7 +10,7 @@ export default() => {
     const [armamentos, setArmamentos] = useState([])
     useEffect(()=>{
 
-        csApi.get('/armamentos?qtd=45').then(results => {
+        csApi.get('/armamentos?qtd=60').then(results => {
             setArmamentos(results.data.data)
         })
     

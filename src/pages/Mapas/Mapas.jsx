@@ -10,7 +10,7 @@ export default() => {
     const [mapas, setMapas] = useState([])
     useEffect(()=>{
 
-        csApi.get('/mapas').then(results => {
+        csApi.get('/mapas?qtd=30').then(results => {
             setMapas(results.data.data)
         })
     

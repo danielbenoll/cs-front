@@ -6,4 +6,5 @@ export default {
   minLength: 'Quantidade menor que o permitido',
   max: 'Valor maior que o permitido',
   min: 'Valor menor que o permitido',
+  unique: 'Esse valor já foi cadastrado!',
 }

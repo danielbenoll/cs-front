@@ -1,11 +1,61 @@
 import React from 'react';
 import "./Cabecalho.css"
-import { Navbar, Nav, NavDropdown, Jumbotron, Button, Image, DropdownButton, Dropdown, ButtonGroup, Card, OverlayTrigger, Tooltip } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Navbar, Nav, NavDropdown, Jumbotron, Button, Image, DropdownButton, Dropdown, ButtonGroup, Card, OverlayTrigger, Tooltip, Modal } from 'react-bootstrap';
+import { Link, withRouter } from 'react-router-dom';
+import { isAuthenticated, login, logout } from '../services/auth';
+import Input from './forms/Input';
+import { useForm } from 'react-hook-form';
+import UsuarioService from '../services/UsuarioService';
 
-export default (props) => {
+const Cabecalho = (props) => {
 
-    console.log(props)
+    function deslogar(){
+        logout()
+
+        props.history.push('/')
+    }
+
+    const menuLogin = () =>(
+        isAuthenticated()?(
+            <>
+                <DropdownButton
+                    as={ButtonGroup}
+                    key={'up'}
+                    id={`dropdown-button-drop-up`}
+                    drop={'up'}
+                    variant="secondary"
+                    title={``}
+                    className="mr-5"
+                >
+                    <Link className="nav-link" to="/armamentos" style={{color: 'black'}}>Armamentos</Link>
+                    <Link className="nav-link" to="/classes" style={{color: 'black'}}>Classes</Link>
+                    <Link className="nav-link" to="/mapas" style={{color: 'black'}}>Mapas</Link>
+                    <Link className="nav-link" to="/modos" style={{color: 'black'}}>Modos</Link>
+                    <Link className="nav-link" to="/paises" style={{color: 'black'}}>Países</Link>
+                    <Link className="nav-link" to="/personagens" style={{color: 'black'}}>Personagens</Link>
+                    <Link className="nav-link" to="/secoes" style={{color: 'black'}}>Seções</Link>
+                    <Dropdown.Divider />
+                    <Link className="nav-link" to="/gerencia" style={{color: 'black'}}>Gerencia</Link>
+                </DropdownButton>
+                <OverlayTrigger
+                    key={'top'}
+                    placement={'top'}
+                    overlay={
+                        <Tooltip id={`tooltip-top`}>
+                        Logout
+                        </Tooltip>
+                    }
+                >
+                    <Nav.Link onClick={deslogar}>
+                        <Image style={{backgroundColor : 'gray'}} width='50' src="https://www.flaticon.com/svg/static/icons/svg/860/860784.svg" roundedCircle />
+                    </Nav.Link>
+                </OverlayTrigger>
+            </>
+        ):(
+            <>
+            </>
+        )
+    )
 
     return (
         <>
@@ -14,52 +64,11 @@ export default (props) => {
                 <small className="text-muted" style={{text:'center'}}>© Copyright 2020 - Daniel O. Aragão</small>
                 <Navbar.Toggle />
                 <Navbar.Collapse className="justify-content-end">
-                    <DropdownButton
-                        as={ButtonGroup}
-                        key={'up'}
-                        id={`dropdown-button-drop-up`}
-                        drop={'up'}
-                        variant="secondary"
-                        title={``}
-                        className="mr-5"
-                    >
-                        <Link className="nav-link" to="/armamentos" style={{color: 'black'}}>Armamentos</Link>
-                        <Link className="nav-link" to="/classes" style={{color: 'black'}}>Classes</Link>
-                        <Link className="nav-link" to="/mapas" style={{color: 'black'}}>Mapas</Link>
-                        <Link className="nav-link" to="/modos" style={{color: 'black'}}>Modos</Link>
-                        <Link className="nav-link" to="/paises" style={{color: 'black'}}>Países</Link>
-                        <Link className="nav-link" to="/personagens" style={{color: 'black'}}>Personagens</Link>
-                        <Link className="nav-link" to="/secoes" style={{color: 'black'}}>Seções</Link>
-                        <Dropdown.Divider />
-                        <Link className="nav-link" to="/gerencia" style={{color: 'black'}}>Gerencia</Link>
-                    </DropdownButton>
-                    <OverlayTrigger
-                        key={'top'}
-                        placement={'top'}
-                        overlay={
-                            <Tooltip id={`tooltip-top`}>
-                            Logout
-                            </Tooltip>
-                        }
-                    >
-                        <Image style={{backgroundColor : 'gray'}} width='50' src="https://www.flaticon.com/svg/static/icons/svg/860/860784.svg" roundedCircle />
-                    </OverlayTrigger>
-                        
+                    {menuLogin()}
                 </Navbar.Collapse>
             </Navbar>
         </>
     )
 }
 
-{/* <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="mr-auto">
-                        <Link className="nav-link" to="/armamentos">Armamentos</Link>
-                        <Link className="nav-link" to="/classes">Classes</Link>
-                        <Link className="nav-link" to="/mapas">Mapas</Link>
-                        <Link className="nav-link" to="/modos">Modos</Link>
-                        <Link className="nav-link" to="/paises">Países</Link>
-                        <Link className="nav-link" to="/personagens">Personagens</Link>
-                        <Link className="nav-link" to="/secoes">Seções</Link>
-                    </Nav>
-                </Navbar.Collapse> */}
+export default withRouter(Cabecalho)

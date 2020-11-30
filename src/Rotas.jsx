@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import Cabecalho from './components/Cabecalho';
 import Armamentos from './pages/Armamentos/Armamentos';
 import ClasseDetalhes from './pages/Classes/ClasseDetalhes';
@@ -13,9 +13,22 @@ import Paises from './pages/Paises/Paises';
 import PersonagemDetalhes from './pages/Personagens/PersonagemDetalhes';
 import Personagens from './pages/Personagens/Personagens';
 import Secoes from './pages/Secoes/Secoes';
+import Gerencia from './pages/Gerencia/Gerencia';
 import SecaoDetalhes from './pages/Secoes/SecaoDetalhes';
 import ArmamentoDetalhes from './pages/Armamentos/ArmamentoDetalhes';
 import Home from './pages/Home';
+import { isAuthenticated } from './services/auth';
+
+const PrivateRoute = ({component: Component, ...rest}) =>(
+    <Route
+        {...rest}
+        render={props =>
+            isAuthenticated()? 
+            (<Component {...props} />):
+            (<Redirect to={{pathname: "/", state: {from: props.location}}} />)
+        }
+    />
+)
 
 export default() => {
     
@@ -23,28 +36,24 @@ export default() => {
         <>
             <BrowserRouter>
                 <Cabecalho/>
-                <Switch>
 
-                    <Route exact path="/" component={Home}/>
-                    <Route exact path="/classes" component={Classes}/>
-                    <Route exact path="/classes/:id" component={ClasseDetalhes}/>
-                    <Route exact path="/armamentos" component={Armamentos}/>
-                    <Route exact path="/armamentos/:id" component={ArmamentoDetalhes}/>
-                    <Route exact path="/paises" component={Paises}/>
-                    <Route exact path="/paises/:id" component={PaisDetalhes}/>
-                    <Route exact path="/mapas" component={Mapas}/>
-                    <Route exact path="/mapas/:id" component={MapaDetalhes}/>
-                    <Route exact path="/personagens" component={Personagens}/>
-                    <Route exact path="/personagens/:id" component={PersonagemDetalhes}/>
-                    <Route exact path="/modos" component={Modos}/>
-                    <Route exact path="/modos/:id" component={ModoDetalhes}/>
-                    <Route exact path="/secoes" component={Secoes}/>
-                    <Route exact path="/secoes/:id" component={SecaoDetalhes}/>
-                    {/* <Route exact path="/filmes/populares" component={FilmesPopulares}/>
-                    <Route exact path="/filmes/lancamentos" component={FilmesLancamentos}/>
-                    <Route exact path="/filmes/bem-avaliados" component={FilmesAvalaiados}/>
-                    <Route exact path="/filmes/:id" component={FilmesDetalhes}/> */}
-                </Switch>
+                <Route exact path="/" component={Home}/>
+                
+                <PrivateRoute exact path="/classes" component={Classes}/>
+                <PrivateRoute exact path="/classes/:id" component={ClasseDetalhes}/>
+                <PrivateRoute exact path="/armamentos" component={Armamentos}/>
+                <PrivateRoute exact path="/armamentos/:id" component={ArmamentoDetalhes}/>
+                <PrivateRoute exact path="/paises" component={Paises}/>
+                <PrivateRoute exact path="/paises/:id" component={PaisDetalhes}/>
+                <PrivateRoute exact path="/mapas" component={Mapas}/>
+                <PrivateRoute exact path="/mapas/:id" component={MapaDetalhes}/>
+                <PrivateRoute exact path="/personagens" component={Personagens}/>
+                <PrivateRoute exact path="/personagens/:id" component={PersonagemDetalhes}/>
+                <PrivateRoute exact path="/modos" component={Modos}/>
+                <PrivateRoute exact path="/modos/:id" component={ModoDetalhes}/>
+                <PrivateRoute exact path="/secoes" component={Secoes}/>
+                <PrivateRoute exact path="/secoes/:id" component={SecaoDetalhes}/>
+                <PrivateRoute exact path="/gerencia" component={Gerencia}/>
             </BrowserRouter>
         </>
     )

@@ -10,7 +10,7 @@ export default() => {
     const [personagens, setPersonagens] = useState([])
     useEffect(()=>{
 
-        csApi.get('/personagens').then(results => {
+        csApi.get('/personagens?qtd=30').then(results => {
             setPersonagens(results.data.data)
         })
     

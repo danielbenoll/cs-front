@@ -12,7 +12,7 @@ export default() => {
     const [paises, setPaises] = useState([])
     useEffect(()=>{
 
-        csApi.get('/paises').then(results => {
+        csApi.get('/paises?qtd=30').then(results => {
             setPaises(results.data.data)
         })
     
