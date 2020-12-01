@@ -1,14 +1,14 @@
 import mensagens from "./mensagens";
 
 export default {
-  nome: {
+  email: {
     required: mensagens.required,
     minLength: {value: 1, message: mensagens.minLength + ' (mínimo de 1 caracteres)' },
-    maxLength: {value: 45, message: mensagens.maxLength + ' (máximo de 45 caracteres)' },
+    maxLength: {value: 250, message: mensagens.maxLength + ' (máximo de 250 caracteres)' },
   },
-  descricao: {
+  password: {
     required: mensagens.required,
     minLength: {value: 1, message: mensagens.minLength + ' (mínimo de 1 caracteres)' },
-    maxLength: {value: 200, message: mensagens.maxLength + ' (máximo de 200 caracteres)' },
+    maxLength: {value: 60, message: mensagens.maxLength + ' (máximo de 60 caracteres)' },
   },
 }

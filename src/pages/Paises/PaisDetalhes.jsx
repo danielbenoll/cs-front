@@ -1,9 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Card, Col, Image, OverlayTrigger, Row, Tooltip } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
-import Capas from '../../components/Capas';
-import Cartao from '../../components/Cartao';
-import Cover from '../../components/Cover';
+import {Col, Row} from 'react-bootstrap';
 import Pagina from '../../components/Pagina';
 import Slide from '../../components/Slide';
 import csApi from '../../services/csApi';
@@ -34,7 +30,7 @@ export default(props) => {
         csApi.get('paises/'+ id).then(results => {
             setArmamentos(results.data.armamentos)
         }) 
-        csApi.get('fotos').then(results => {
+        csApi.get('fotos?qtd=60').then(results => {
             setFotos(results.data.data)
         }) 
         
@@ -56,7 +52,8 @@ export default(props) => {
             
         }
     }
-    console.log(pais)
+    console.log(mapas)
+    console.log(fotos)
     return (
         <Pagina titulo={pais.local} imagem={pais.bandeira}>
             {foto.length>0 &&

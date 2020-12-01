@@ -1,11 +1,12 @@
 import mensagens from "./mensagens";
 
 export default {
-  local: {
+  mapa_id: {
     required: mensagens.required,
-    maxLength: {value: 45, message: mensagens.maxLength + ' (máximo de 45 caracteres)' },
+    maxLength: {value: 90, message: mensagens.maxLength + ' (máximo de 90 caracteres)' },
   },
-  bandeira: {
+  foto: {
+    required: mensagens.required,
     maxLength: {value: 400, message: mensagens.maxLength + ' (máximo de 400 caracteres)' },
   },
 }

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useEffect } from 'react';
 import { Col, Form, Row } from 'react-bootstrap';
 import { mask, unMask } from 'remask';
 
@@ -6,6 +7,10 @@ export default(props) => {
 
     const [value, setValue] = useState()
 
+    useEffect(()=>{
+        setValue(props.valor)
+    }, [props])
+    
     const id = props.id ? props.id: props.name
     const labelWidth = props.labelWidth ? props.labelWidth : 3 
     const inputWidth = props.inputWidth ? props.inputWidth : 12 - labelWidth
@@ -24,7 +29,13 @@ export default(props) => {
             <Form.Group as={Row} controlId={id}>
                 <Form.Label column sm={labelWidth} className="text-right">{props.label} {required()}</Form.Label>
                 <Col sm={inputWidth}>
-                    <Form.Control {...props} ref={register(validator[props.name])} isInvalid={errors[props.name]} value={value} onChange={handleChange}/>
+                    <Form.Control 
+                    ref={register(validator[props.name])} 
+                    {...props} 
+                    isInvalid={errors[props.name]} 
+                    value={value} 
+                    onChange={handleChange}
+                    />
                     <Form.Control.Feedback type='invalid'>{errors[props.name]?.message}</Form.Control.Feedback>
                 </Col>
             </Form.Group>

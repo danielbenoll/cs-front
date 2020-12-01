@@ -1,11 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Card, Col, Image, OverlayTrigger, Popover, Row, Tooltip } from 'react-bootstrap';
+import {Button, Col, Image, OverlayTrigger, Popover, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import Capas from '../../components/Capas';
-import Cartao from '../../components/Cartao';
-import Cover from '../../components/Cover';
 import Pagina from '../../components/Pagina';
-import Slide from '../../components/Slide';
 import csApi from '../../services/csApi';
 
 

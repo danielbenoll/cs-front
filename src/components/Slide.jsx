@@ -10,7 +10,7 @@ export default(props) => {
 
     const label= props.label ? props.label : 'nome'
 
-    console.log(lista)
+    // console.log(lista)
     const settings = {
         dots: true,
         infinite: false,

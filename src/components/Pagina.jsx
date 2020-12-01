@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Col, Container, Image, Jumbotron, Row } from 'react-bootstrap';
+import { Card, Container, Image, Jumbotron } from 'react-bootstrap';
 
 export default(props) => {
     return(

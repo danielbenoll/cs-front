@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Col, Form, Image, Modal, Row, Tab, Table, Tabs } from 'react-bootstrap';
+import { Button, Form, Image, Modal, Row, Tab, Table, Tabs } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
-import { Link, withRouter } from 'react-router-dom';
-import Cartao from '../../components/Cartao';
+import { withRouter } from 'react-router-dom';
+import Input from '../../components/forms/Input';
 import Pagina from '../../components/Pagina';
 import ArmamentoService from '../../services/ArmamentoService';
 import ClasseService from '../../services/ClasseService';
@@ -13,7 +13,7 @@ import PaisService from '../../services/PaisService';
 import PersonagemService from '../../services/PersonagemService';
 import SecaoService from '../../services/SecaoService';
 import UsuarioService from '../../services/UsuarioService';
-import UserValidator from '../../validator/UsuarioValidator';
+import UsuarioValidator from '../../validator/UsuarioValidator';
 import ArmamentoValidator from '../../validator/ArmamentoValidator';
 import ClasseValidator from '../../validator/ClasseValidator';
 import MapaValidator from '../../validator/MapaValidator';
@@ -21,17 +21,86 @@ import ModoValidator from '../../validator/ModoValidator';
 import PaisValidator from '../../validator/PaisValidator';
 import PersonagemValidator from '../../validator/PersonagemValidator';
 import SecaoValidator from '../../validator/SecaoValidator';
+import Select from '../../components/forms/Select';
+import FotoValidator from '../../validator/FotoValidator';
+import FotoService from '../../services/FotoService';
+import MapaModoValidator from '../../validator/MapaModoValidator';
+import MapaModoService from '../../services/MapaModoService';
 
 const Gerencia = (props) => {
 
     const { register, handleSubmit, errors } = useForm()
-    const reference = { register, UserValidator, ArmamentoValidator, ClasseValidator, MapaValidator, ModoValidator, PaisValidator, PersonagemValidator, SecaoValidator, errors }
+    
+    let validator
+
+    let referenceArmamento
+    if(ArmamentoValidator){
+        validator = ArmamentoValidator
+        referenceArmamento = { register, validator, errors }
+    }
+
+    let referenceClasse
+    if(ClasseValidator){
+        validator = ClasseValidator
+        referenceClasse = { register, validator, errors }
+    }
+
+    let referenceFoto
+    if(FotoValidator){
+        validator = FotoValidator
+        referenceFoto = { register, validator, errors }
+    }
+
+    let referenceMapa
+    if(MapaValidator){
+        validator = MapaValidator
+        referenceMapa = { register, validator, errors }
+    }
+
+    let referenceModo
+    if(ModoValidator){
+        validator = ModoValidator
+        referenceModo = { register, validator, errors }
+    }
+
+    let referenceMapaModo
+    if(MapaModoValidator){
+        validator = MapaModoValidator
+        referenceMapaModo = { register, validator, errors }
+    }
+
+    let referencePais
+    if(PaisValidator){
+        validator = PaisValidator
+        referencePais = { register, validator, errors }
+    }
+
+    let referencePersonagem
+    if(PersonagemValidator){
+        validator = PersonagemValidator
+        referencePersonagem = { register, validator, errors }
+    }
+
+    let referenceSecao
+    if(SecaoValidator){
+        validator = SecaoValidator
+        referenceSecao = { register, validator, errors }
+    }
+
+    let referenceUsuario
+    if(UsuarioValidator){
+        validator = UsuarioValidator
+        referenceUsuario = { register, validator, errors }
+    }
+
+    const [dados, setDados] = useState({})
 
     const [armamentos, setArmamentos] = useState([])
     const [classes, setClasses] = useState([])
     const [fotos, setFotos] = useState([])
     const [mapas, setMapas] = useState([])
     const [modos, setModos] = useState([])
+    const [mapaModos, setMapaModos] = useState([])
     const [paises, setPaises] = useState([])
     const [personagens, setPersonagens] = useState([])
     const [secoes, setSecoes] = useState([])
@@ -45,7 +114,7 @@ const Gerencia = (props) => {
         csApi.get('/classes').then(results => {
             setClasses(results.data.data)
         })
-        csApi.get('/fotos').then(results => {
+        csApi.get('/fotos?qtd=60').then(results => {
             setFotos(results.data.data)
         })
         csApi.get('/mapas?qtd=30').then(results => {
@@ -53,6 +122,9 @@ const Gerencia = (props) => {
         })
         csApi.get('/modos').then(results => {
             setModos(results.data.data)
+        })
+        csApi.get('/mapa-modos?qtd=60').then(results => {
+            setMapaModos(results.data.data)
         })
         csApi.get('/paises?qtd=30').then(results => {
             setPaises(results.data.data)
@@ -67,7 +139,9 @@ const Gerencia = (props) => {
             setUsers(results.data.data)
         })
     
-    }, [])
+    }, [props])
+
+    // console.log(mapaModos)
 
     const [modalArmamento, setModalArmamento] = React.useState(false);
 
@@ -86,49 +160,15 @@ const Gerencia = (props) => {
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Form.Group as={Row} controlId={'classe_idArmamento'}>
-                        <Form.Label column sm={3} className="text-right">ID Classe</Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="number" name="classe_id" />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId={'secao_idArmamento'}>
-                        <Form.Label column sm={3} className="text-right">ID Seção <span className="text-danger">*</span></Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="number" name="secao_id" />
-                            <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId={'pais_idArmamento'}>
-                        <Form.Label column sm={3} className="text-right">ID País</Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="number" name="pais_id" />
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId={'nomeArmamento'}>
-                        <Form.Label column sm={3} className="text-right">Nome <span className="text-danger">*</span></Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="text" name="nome" />
-                            <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId={'descricaoArmamento'}>
-                        <Form.Label column sm={3} className="text-right">Descrição <span className="text-danger">*</span></Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="text" name="descricao" />
-                            <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId={'fotoArmamento'}>
-                        <Form.Label column sm={3} className="text-right">Foto</Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="text" name="foto" />
-                        </Col>
-                    </Form.Group>
-
+                    <Select label="ID Classe" name="classe_id" referencia={referenceArmamento} lista={classes} chave="id" description="lado"/>
+                    <Select label="ID Seção" name="secao_id" referencia={referenceArmamento} lista={secoes} chave="id" description="nome"/>
+                    <Select label="ID País" name="pais_id" referencia={referenceArmamento} lista={paises} chave="id" description="local"/>
+                    <Input label="Nome" name="nome" valor={dados.nome} referencia={referenceArmamento}/>
+                    <Input label="Descrição" name="descricao" valor={dados.descricao} referencia={referenceArmamento}/>
+                    <Input label="Foto" name="foto" valor={dados.foto} referencia={referenceArmamento}/>
                     <Modal.Footer className="mt-5">
                         <Button variant="secondary" onClick={props.onHide}>Fechar</Button>
-                        <Button variant="danger" onClick={handleSubmit(cadastrarArmamento)}>Cadastrar</Button>
+                        <Button variant="danger" onClick={handleSubmit(cadastrarArmamento)}>Salvar</Button>
                     </Modal.Footer>
                 </Form>
             </Modal.Body>
@@ -136,25 +176,27 @@ const Gerencia = (props) => {
         );
     }
 
-    function cadastrarArmamento() {
-
-        const data={
-            classe_id: document.getElementById('classe_idArmamento').value,
-            secao_id: document.getElementById('secao_idArmamento').value,
-            pais_id: document.getElementById('pais_idArmamento').value,
-            nome: document.getElementById('nomeArmamento').value,
-            descricao: document.getElementById('descricaoArmamento').value,
-            foto: document.getElementById('fotoArmamento').value,
-        }
-
+    function cadastrarArmamento(data) {
         console.log(data)
+        console.log(dados)
 
-        ArmamentoService.create(data).then(results => {
-          console.log(results.data)
-          alert("Cadastrado com Sucesso!")
-          window.location.reload(true);
+        const resultado = dados.id ? ArmamentoService.update(dados.id, data) : ArmamentoService.create(data)
+
+        resultado.then(results => {
+            console.log(results.data)
+            alert("Ação realizada com Sucesso!")
+            window.location.reload(true);
         })
+
     }
+
+    const editArmamento = (cod) =>(
+        ArmamentoService.get(cod).then(results=>{
+            setDados(results.data)
+            console.log(results.data)
+            setModalArmamento(true)
+        })
+    )
 
     function deletArmamentos(id) {
         console.log(id)
@@ -187,29 +229,12 @@ const Gerencia = (props) => {
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Form.Group as={Row} controlId={'ladoClasse'}>
-                        <Form.Label column sm={3} className="text-right">Lado <span className="text-danger">*</span></Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="text" name="lado" />
-                            <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId={'descricaoClasse'}>
-                        <Form.Label column sm={3} className="text-right">Descrição <span className="text-danger">*</span></Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="text" name="descricao" />
-                            <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId={'imgClasse'}>
-                        <Form.Label column sm={3} className="text-right">Imagem</Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="text" name="img" />
-                        </Col>
-                    </Form.Group>
+                    <Input label="Lado" name="lado" valor={dados.lado} referencia={referenceClasse}/>
+                    <Input label="Descrição" name="descricao" valor={dados.descricao} referencia={referenceClasse}/>
+                    <Input label="Imagem" name="img" valor={dados.img} referencia={referenceClasse}/>
                     <Modal.Footer className="mt-5">
                         <Button variant="secondary" onClick={props.onHide}>Fechar</Button>
-                        <Button variant="danger" onClick={handleSubmit(cadastrarClasse)}>Cadastrar</Button>
+                        <Button variant="danger" onClick={handleSubmit(cadastrarClasse)}>Salvar</Button>
                     </Modal.Footer>
                 </Form>
             </Modal.Body>
@@ -217,20 +242,25 @@ const Gerencia = (props) => {
         );
     }
 
-    function cadastrarClasse() {
+    function cadastrarClasse(data) {
+        console.log(data)
 
-        const data={
-            lado: document.getElementById('ladoClasse').value,
-            descricao: document.getElementById('descricaoClasse').value,
-            img: document.getElementById('imgClasse').value,
-        }
+        const resultado = dados.id ? ClasseService.update(dados.id, data) : ClasseService.create(data)
 
-        ClasseService.create(data).then(results => {
-          console.log(results.data)
-          alert("Cadastrado com Sucesso!")
-          window.location.reload(true);
+        resultado.then(results => {
+            console.log(results.data)
+            alert("Ação realizada com Sucesso!")
+            window.location.reload(true);
         })
     }
+
+    const editClasse = (cod) =>(
+        ClasseService.get(cod).then(results=>{
+            setDados(results.data)
+            console.log(results.data)
+            setModalClasse(true)
+        })
+    )
 
     function deletClasses(id) {
         console.log(id)
@@ -239,6 +269,69 @@ const Gerencia = (props) => {
             //   props.history.push('/gerencia')
               window.location.reload(true);
               console.log(results.status)
+              alert("Deletado com sucesso!")
+            }).catch(error => {
+                console.log(error.response.data)
+                alert("Não foi possível deletar o registro.")
+            })
+        }
+    }
+
+    const [modalFoto, setModalFoto] = React.useState(false);
+
+    function ModalFoto(props) {
+        return (
+          <Modal
+            {...props}
+            size="lg"
+            aria-labelledby="contained-modal-title-classe"
+            centered
+          >
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-classe">
+                    Cadastro de Foto
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form>
+                    <Select label="ID Mapa" name="mapa_id" referencia={referenceArmamento} lista={mapas} chave="id" description="nome"/>
+                    <Input label="Foto" name="foto" valor={dados.foto} referencia={referenceFoto}/>
+                    <Modal.Footer className="mt-5">
+                        <Button variant="secondary" onClick={props.onHide}>Fechar</Button>
+                        <Button variant="danger" onClick={handleSubmit(cadastrarFoto)}>Salvar</Button>
+                    </Modal.Footer>
+                </Form>
+            </Modal.Body>
+          </Modal>
+        );
+    }
+
+    function cadastrarFoto(data) {
+        console.log(data)
+
+        const resultado = dados.id ? FotoService.update(dados.id, data) : FotoService.create(data)
+
+        resultado.then(results => {
+            console.log(results.data)
+            alert("Ação realizada com Sucesso!")
+            window.location.reload(true);
+        })
+    }
+
+    const editFoto = (cod) =>(
+        FotoService.get(cod).then(results=>{
+            setDados(results.data)
+            console.log(results.data)
+            setModalFoto(true)
+        })
+    )
+
+    function deletFotos(id) {
+        console.log(id)
+        if (window.confirm('Deseja realmente excluir o registro?')) {
+            FotoService.delete(id).then(results => {
+            //   props.history.push('/gerencia')
+              window.location.reload(true);
               alert("Deletado com sucesso!")
             }).catch(error => {
                 console.log(error.response.data)
@@ -264,23 +357,11 @@ const Gerencia = (props) => {
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Form.Group as={Row} controlId={'pais_idMapa'}>
-                        <Form.Label column sm={3} className="text-right">ID País <span className="text-danger">*</span></Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="number" name="pais_id" />
-                            <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId={'nomeMapa'}>
-                        <Form.Label column sm={3} className="text-right">Nome <span className="text-danger">*</span></Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="text" name="nome" />
-                            <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
+                    <Select label="ID País" name="pais_id" referencia={referenceMapa} lista={paises} chave="id" description="local"/>
+                    <Input label="Nome" name="nome" valor={dados.nome} referencia={referenceMapa}/>
                     <Modal.Footer className="mt-5">
                         <Button variant="secondary" onClick={props.onHide}>Fechar</Button>
-                        <Button variant="danger" onClick={handleSubmit(cadastrarMapa)}>Cadastrar</Button>
+                        <Button variant="danger" onClick={handleSubmit(cadastrarMapa)}>Salvar</Button>
                     </Modal.Footer>
                 </Form>
             </Modal.Body>
@@ -288,21 +369,25 @@ const Gerencia = (props) => {
         );
     }
 
-    function cadastrarMapa() {
-
-        const data={
-            pais_id: parseInt(document.getElementById('pais_idMapa').value),
-            nome: document.getElementById('nomeMapa').value,
-        }
-
+    function cadastrarMapa(data) {
         console.log(data)
 
-        MapaService.create(data).then(results => {
-          console.log(results.data)
-          alert("Cadastrado com Sucesso!")
-          window.location.reload(true);
+        const resultado = dados.id ? MapaService.update(dados.id, data) : MapaService.create(data)
+
+        resultado.then(results => {
+            console.log(results.data)
+            alert("Ação realizada com Sucesso!")
+            window.location.reload(true);
         })
     }
+
+    const editMapa = (cod) =>(
+        MapaService.get(cod).then(results=>{
+            setDados(results.data)
+            console.log(results.data)
+            setModalMapa(true)
+        })
+    )
 
     function deletMapas(id) {
         console.log(id)
@@ -335,23 +420,11 @@ const Gerencia = (props) => {
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Form.Group as={Row} controlId={'modoModo'}>
-                        <Form.Label column sm={3} className="text-right">Modo <span className="text-danger">*</span></Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="text" name="modo" />
-                            <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId={'descricaoModo'}>
-                        <Form.Label column sm={3} className="text-right">Descrição <span className="text-danger">*</span></Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="text" name="descricao" />
-                            <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
+                    <Input label="Modo" name="modo" valor={dados.modo} referencia={referenceModo}/>
+                    <Input label="Descrição" name="descricao" valor={dados.descricao} referencia={referenceModo}/>
                     <Modal.Footer className="mt-5">
                         <Button variant="secondary" onClick={props.onHide}>Fechar</Button>
-                        <Button variant="danger" onClick={handleSubmit(cadastrarModo)}>Cadastrar</Button>
+                        <Button variant="danger" onClick={handleSubmit(cadastrarModo)}>Salvar</Button>
                     </Modal.Footer>
                 </Form>
             </Modal.Body>
@@ -359,26 +432,93 @@ const Gerencia = (props) => {
         );
     }
 
-    function cadastrarModo() {
-
-        const data={
-            modo: document.getElementById('modoModo').value,
-            descricao: document.getElementById('descricaoModo').value,
-        }
-
+    function cadastrarModo(data) {
         console.log(data)
 
-        ModoService.create(data).then(results => {
-          console.log(results.data)
-          alert("Cadastrado com Sucesso!")
-          window.location.reload(true);
+        const resultado = dados.id ? ModoService.update(dados.id, data) : ModoService.create(data)
+
+        resultado.then(results => {
+            console.log(results.data)
+            alert("Ação realizada com Sucesso!")
+            window.location.reload(true);
         })
     }
+
+    const editModo = (cod) =>(
+        ModoService.get(cod).then(results=>{
+            setDados(results.data)
+            console.log(results.data)
+            setModalModo(true)
+        })
+    )
 
     function deletModos(id) {
         console.log(id)
         if (window.confirm('Deseja realmente excluir o registro?')) {
             ModoService.delete(id).then(results => {
+            //   props.history.push('/gerencia')
+              window.location.reload(true);
+              alert("Deletado com sucesso!")
+            }).catch(error => {
+                console.log(error.response.data)
+                alert("Não foi possível deletar o registro.")
+            })
+        }
+    }
+
+    const [modalMapaModo, setModalMapaModo] = React.useState(false);
+
+    function ModalMapaModo(props) {
+        return (
+          <Modal
+            {...props}
+            size="lg"
+            aria-labelledby="contained-modal-title-classe"
+            centered
+          >
+            <Modal.Header closeButton>
+                <Modal.Title id="contained-modal-title-classe">
+                    Cadastro de MapaModo
+                </Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                <Form>
+                    <Select label="ID Mapa" name="mapa_id" referencia={referenceMapaModo} lista={mapas} chave="id" description="nome"/>
+                    <Select label="ID Modo" name="modo_id" referencia={referenceMapaModo} lista={modos} chave="id" description="modo"/>
+                    <Modal.Footer className="mt-5">
+                        <Button variant="secondary" onClick={props.onHide}>Fechar</Button>
+                        <Button variant="danger" onClick={handleSubmit(cadastrarMapaModo)}>Salvar</Button>
+                    </Modal.Footer>
+                </Form>
+            </Modal.Body>
+          </Modal>
+        );
+    }
+
+    function cadastrarMapaModo(data) {
+        console.log(data)
+
+        const resultado = dados.id ? MapaModoService.update(dados.id, data) : MapaModoService.create(data)
+
+        resultado.then(results => {
+            console.log(results.data)
+            alert("Ação realizada com Sucesso!")
+            window.location.reload(true);
+        })
+    }
+
+    const editMapaModo = (cod) =>(
+        MapaModoService.get(cod).then(results=>{
+            setDados(results.data)
+            console.log(results.data)
+            setModalMapaModo(true)
+        })
+    )
+
+    function deletMapaModos(id) {
+        console.log(id)
+        if (window.confirm('Deseja realmente excluir o registro?')) {
+            MapaModoService.delete(id).then(results => {
             //   props.history.push('/gerencia')
               window.location.reload(true);
               alert("Deletado com sucesso!")
@@ -406,22 +546,11 @@ const Gerencia = (props) => {
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Form.Group as={Row} controlId={'localPais'}>
-                        <Form.Label column sm={3} className="text-right">Local <span className="text-danger">*</span></Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="text" name="local" />
-                            <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId={'bandeiraPais'}>
-                        <Form.Label column sm={3} className="text-right">Bandeira</Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="text" name="bandeira" />
-                        </Col>
-                    </Form.Group>
+                    <Input label="Local" name="local" valor={dados.local} referencia={referencePais}/>
+                    <Input label="Bandeira" name="bandeira" valor={dados.bandeira} referencia={referencePais}/>
                     <Modal.Footer className="mt-5">
                         <Button variant="secondary" onClick={props.onHide}>Fechar</Button>
-                        <Button variant="danger" onClick={handleSubmit(cadastrarPais)}>Cadastrar</Button>
+                        <Button variant="danger" onClick={handleSubmit(cadastrarPais)}>Salvar</Button>
                     </Modal.Footer>
                 </Form>
             </Modal.Body>
@@ -429,21 +558,25 @@ const Gerencia = (props) => {
         );
     }
 
-    function cadastrarPais() {
-
-        const data={
-            local: document.getElementById('localPais').value,
-            bandeira: document.getElementById('bandeiraPais').value,
-        }
-
+    function cadastrarPais(data) {
         console.log(data)
 
-        PaisService.create(data).then(results => {
-          console.log(results.data)
-          alert("Cadastrado com Sucesso!")
-          window.location.reload(true);
+        const resultado = dados.id ? PaisService.update(dados.id, data) : PaisService.create(data)
+
+        resultado.then(results => {
+            console.log(results.data)
+            alert("Ação realizada com Sucesso!")
+            window.location.reload(true);
         })
     }
+
+    const editPais = (cod) =>(
+        PaisService.get(cod).then(results=>{
+            setDados(results.data)
+            console.log(results.data)
+            setModalPais(true)
+        })
+    )
 
     function deletPaises(id) {
         console.log(id)
@@ -476,36 +609,13 @@ const Gerencia = (props) => {
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Form.Group as={Row} controlId={'pais_idPersonagem'}>
-                        <Form.Label column sm={3} className="text-right">ID País <span className="text-danger">*</span></Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="number" name="pais" />
-                            <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId={'classe_idPersonagem'}>
-                        <Form.Label column sm={3} className="text-right">ID Classe<span className="text-danger">*</span></Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="number" name="classe" />
-                            <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId={'nomePersonagem'}>
-                        <Form.Label column sm={3} className="text-right">Nome<span className="text-danger">*</span></Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="text" name="nome" />
-                            <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId={'fotoPersonagem'}>
-                        <Form.Label column sm={3} className="text-right">Foto</Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="text" name="foto" />
-                        </Col>
-                    </Form.Group>
+                    <Select label="ID País" name="pais_id" referencia={referencePersonagem} lista={paises} chave="id" description="local"/>
+                    <Select label="ID Classe" name="classe_id" referencia={referencePersonagem} lista={classes} chave="id" description="lado"/>
+                    <Input label="Nome" name="nome" valor={dados.nome} referencia={referencePersonagem}/>
+                    <Input label="Foto" name="foto" valor={dados.foto} referencia={referencePersonagem}/>
                     <Modal.Footer className="mt-5">
                         <Button variant="secondary" onClick={props.onHide}>Fechar</Button>
-                        <Button variant="danger" onClick={handleSubmit(cadastrarPersonagem)}>Cadastrar</Button>
+                        <Button variant="danger" onClick={handleSubmit(cadastrarPersonagem)}>Salvar</Button>
                     </Modal.Footer>
                 </Form>
             </Modal.Body>
@@ -513,23 +623,25 @@ const Gerencia = (props) => {
         );
     }
 
-    function cadastrarPersonagem() {
-
-        const data={
-            pais_id: document.getElementById('pais_idPersonagem').value,
-            classe_id: document.getElementById('classe_idPersonagem').value,
-            nome: document.getElementById('nomePersonagem').value,
-            foto: document.getElementById('fotoPersonagem').value,
-        }
-
+    function cadastrarPersonagem(data) {
         console.log(data)
 
-        PersonagemService.create(data).then(results => {
-          console.log(results.data)
-          alert("Cadastrado com Sucesso!")
-          window.location.reload(true);
+        const resultado = dados.id ? PersonagemService.update(dados.id, data) : PersonagemService.create(data)
+
+        resultado.then(results => {
+            console.log(results.data)
+            alert("Ação realizada com Sucesso!")
+            window.location.reload(true);
         })
     }
+
+    const editPersonagem = (cod) =>(
+        PersonagemService.get(cod).then(results=>{
+            setDados(results.data)
+            console.log(results.data)
+            setModalPersonagem(true)
+        })
+    )
 
     function deletPersonagens(id) {
         console.log(id)
@@ -562,23 +674,11 @@ const Gerencia = (props) => {
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Form.Group as={Row} controlId={'nomeSecao'}>
-                        <Form.Label column sm={3} className="text-right">Nome <span className="text-danger">*</span></Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="text" name="nome" />
-                            <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId={'descricaoSecao'}>
-                        <Form.Label column sm={3} className="text-right">Descrição <span className="text-danger">*</span></Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="text" name="descricao" />
-                            <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
+                    <Input label="Nome" name="nome" valor={dados.nome} referencia={referenceSecao}/>
+                    <Input label="Descricao" name="descricao" valor={dados.descricao} referencia={referenceSecao}/>
                     <Modal.Footer className="mt-5">
                         <Button variant="secondary" onClick={props.onHide}>Fechar</Button>
-                        <Button variant="danger" onClick={handleSubmit(cadastrarSecao)}>Cadastrar</Button>
+                        <Button variant="danger" onClick={handleSubmit(cadastrarSecao)}>Salvar</Button>
                     </Modal.Footer>
                 </Form>
             </Modal.Body>
@@ -586,21 +686,25 @@ const Gerencia = (props) => {
         );
     }
 
-    function cadastrarSecao() {
-
-        const data={
-            nome: document.getElementById('nomeSecao').value,
-            descricao: document.getElementById('descricaoSecao').value,
-        }
-
+    function cadastrarSecao(data) {
         console.log(data)
 
-        SecaoService.create(data).then(results => {
-          console.log(results.data)
-          alert("Cadastrado com Sucesso!")
-          window.location.reload(true);
+        const resultado = dados.id ? SecaoService.update(dados.id, data) : SecaoService.create(data)
+
+        resultado.then(results => {
+            console.log(results.data)
+            alert("Ação realizada com Sucesso!")
+            window.location.reload(true);
         })
     }
+
+    const editSecao = (cod) =>(
+        SecaoService.get(cod).then(results=>{
+            setDados(results.data)
+            console.log(results.data)
+            setModalSecao(true)
+        })
+    )
 
     function deletSecoes(id) {
         console.log(id)
@@ -633,30 +737,12 @@ const Gerencia = (props) => {
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Form.Group as={Row} controlId={'usernameUsuario'}>
-                        <Form.Label column sm={3} className="text-right">Username <span className="text-danger">*</span></Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="text" name="username" />
-                            <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId={'emailUsuario'}>
-                        <Form.Label column sm={3} className="text-right">E-mail <span className="text-danger">*</span></Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="email" name="email" />
-                            <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
-                    <Form.Group as={Row} controlId={'passwordUsuario'}>
-                        <Form.Label column sm={3} className="text-right">Senha <span className="text-danger">*</span></Form.Label>
-                        <Col sm={9}>
-                            <Form.Control type="password" name="password" />
-                            <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                        </Col>
-                    </Form.Group>
+                    <Input label="Nome" name="username" valor={dados.username} referencia={referenceUsuario}/>
+                    <Input label="E-mail" name="email" valor={dados.email} referencia={referenceUsuario} type="email"/>
+                    <Input label="Senha" name="password" valor={dados.password} referencia={referenceUsuario} type="password"/>
                     <Modal.Footer className="mt-5">
                         <Button variant="secondary" onClick={props.onHide}>Fechar</Button>
-                        <Button variant="danger" onClick={handleSubmit(cadastrarUsuario)}>Cadastrar</Button>
+                        <Button variant="danger" onClick={handleSubmit(cadastrarUsuario)}>Salvar</Button>
                     </Modal.Footer>
                 </Form>
             </Modal.Body>
@@ -664,24 +750,27 @@ const Gerencia = (props) => {
         );
     }
 
-    function cadastrarUsuario() {
-
-        const data={
-            username: document.getElementById('usernameUsuario').value,
-            email: document.getElementById('emailUsuario').value,
-            password: document.getElementById('passwordUsuario').value,
-        }
-
+    function cadastrarUsuario(data) {
         console.log(data)
 
-        UsuarioService.create(data).then(results => {
-          console.log(results.data)
-          alert("Cadastrado com Sucesso!")
-          window.location.reload(true);
+        const resultado = dados.id ? UsuarioService.update(dados.id, data) : UsuarioService.create(data)
+
+        resultado.then(results => {
+            console.log(results.data)
+            alert("Ação realizada com Sucesso!")
+            window.location.reload(true);
         })
     }
 
-    function deletUsers(id) {
+    const editUsuario = (cod) =>(
+        UsuarioService.get(cod).then(results=>{
+            setDados(results.data)
+            console.log(results.data)
+            setModalUsuario(true)
+        })
+    )
+
+    function deletUsuario(id) {
         console.log(id)
         if (window.confirm('Deseja realmente excluir o registro?')) {
             UsuarioService.delete(id).then(results => {
@@ -714,8 +803,9 @@ const Gerencia = (props) => {
                                 <th>ID Seção</th>
                                 <th>ID País</th>
                                 <th>Nome</th>
+                                <th>Descrição</th>
                                 <th>Foto</th>
-                                <th>Ação</th>
+                                <th style={{width:150}}>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -726,8 +816,9 @@ const Gerencia = (props) => {
                                     <td>{item.secao_id}</td>
                                     <td>{item.pais_id}</td>
                                     <td>{item.nome}</td>
+                                    <td>{item.descricao}</td>
                                     <td><Image width="80" src={item.foto}/></td>
-                                    <td><Image width="40" onClick={() => deletArmamentos(item.id)} src={'https://www.flaticon.com/svg/static/icons/svg/1214/1214428.svg'}/></td>
+                                    <td><Image width="40" onClick={() => editArmamento(item.id)} src={'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Edit_icon_%28the_Noun_Project_30184%29.svg/1024px-Edit_icon_%28the_Noun_Project_30184%29.svg.png'}/><Image className="ml-3" width="40" onClick={() => deletArmamentos(item.id)} src={'https://www.flaticon.com/svg/static/icons/svg/1214/1214428.svg'}/></td>
                                 </tr>
                             ))}
                         </tbody>
@@ -747,7 +838,7 @@ const Gerencia = (props) => {
                                 <th>#</th>
                                 <th>Lado</th>
                                 <th>Descrição</th>
-                                <th>Ação</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -757,7 +848,36 @@ const Gerencia = (props) => {
                                     <td>{item.id}</td>
                                     <td><p><Image className="mr-3" width="50" src={item.img} />{item.lado}</p></td>
                                     <td>{item.descricao}</td>
-                                    <td><Image width="40" onClick={() => deletClasses(item.id)} src={'https://www.flaticon.com/svg/static/icons/svg/1214/1214428.svg'}/></td>
+                                    <td><Image width="40" onClick={() => editClasse(item.id)} src={'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Edit_icon_%28the_Noun_Project_30184%29.svg/1024px-Edit_icon_%28the_Noun_Project_30184%29.svg.png'}/><Image className="ml-3" width="40" onClick={() => deletClasses(item.id)} src={'https://www.flaticon.com/svg/static/icons/svg/1214/1214428.svg'}/></td>
+                                </tr>
+                            ))}
+                        </tbody>
+                        </Table>
+                    </Row>
+                </Tab>
+                <Tab eventKey="fotos" title="Fotos">
+                    <Row>
+                        <Button className="ml-1 mb-4 justify-content-md-right" variant="dark" onClick={() => setModalFoto(true)}>Nova Foto</Button>
+                        <ModalFoto
+                            show={modalFoto}
+                            onHide={() => setModalFoto(false)}
+                        />
+                        <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>ID Mapa</th>
+                                <th>Foto</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {fotos.map(item => (
+                                <tr>
+                                    <td>{item.id}</td>
+                                    <td>{item.mapa_id}</td>
+                                    <td><p><Image className="mr-3" width="200" src={item.foto} /></p></td>
+                                    <td><Image width="40" onClick={() => editFoto(item.id)} src={'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Edit_icon_%28the_Noun_Project_30184%29.svg/1024px-Edit_icon_%28the_Noun_Project_30184%29.svg.png'}/><Image className="ml-3" width="40" onClick={() => deletFotos(item.id)} src={'https://www.flaticon.com/svg/static/icons/svg/1214/1214428.svg'}/></td>
                                 </tr>
                             ))}
                         </tbody>
@@ -777,7 +897,7 @@ const Gerencia = (props) => {
                                 <th>#</th>
                                 <th>ID País</th>
                                 <th>Nome</th>
-                                <th>Ação</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -786,7 +906,7 @@ const Gerencia = (props) => {
                                     <td>{item.id}</td>
                                     <td>{item.pais_id}</td>
                                     <td>{item.nome}</td>
-                                    <td><Image width="40" onClick={() => deletMapas(item.id)} src={'https://www.flaticon.com/svg/static/icons/svg/1214/1214428.svg'}/></td>
+                                    <td><Image width="40" onClick={() => editMapa(item.id)} src={'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Edit_icon_%28the_Noun_Project_30184%29.svg/1024px-Edit_icon_%28the_Noun_Project_30184%29.svg.png'}/><Image className="ml-3" width="40" onClick={() => deletMapas(item.id)} src={'https://www.flaticon.com/svg/static/icons/svg/1214/1214428.svg'}/></td>
                                 </tr>
                             ))}
                         </tbody>
@@ -806,7 +926,7 @@ const Gerencia = (props) => {
                                 <th>#</th>
                                 <th>Modo</th>
                                 <th>Descrição</th>
-                                <th>Ação</th>
+                                <th style={{width:150}}>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -815,7 +935,36 @@ const Gerencia = (props) => {
                                     <td>{item.id}</td>
                                     <td>{item.modo}</td>
                                     <td>{item.descricao}</td>
-                                    <td><Image width="40" onClick={() => deletModos(item.id)} src={'https://www.flaticon.com/svg/static/icons/svg/1214/1214428.svg'}/></td>
+                                    <td><Image width="40" onClick={() => editModo(item.id)} src={'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Edit_icon_%28the_Noun_Project_30184%29.svg/1024px-Edit_icon_%28the_Noun_Project_30184%29.svg.png'}/><Image className="ml-3" width="40" onClick={() => deletModos(item.id)} src={'https://www.flaticon.com/svg/static/icons/svg/1214/1214428.svg'}/></td>
+                                </tr>
+                            ))}
+                        </tbody>
+                        </Table>
+                    </Row>
+                </Tab>
+                <Tab eventKey="mapaModos" title="Modos de Mapas">
+                    <Row>
+                        <Button className="ml-1 mb-4 justify-content-md-right" variant="dark" onClick={() => setModalMapaModo(true)}>Novo Modos de Mapas</Button>
+                        <ModalMapaModo
+                            show={modalMapaModo}
+                            onHide={() => setModalMapaModo(false)}
+                        />
+                        <Table striped bordered hover>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>ID Mapa</th>
+                                <th>ID Modo</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {mapaModos.map(item => (
+                                <tr>
+                                    <td>{item.id}</td>
+                                    <td>{item.mapa_id}</td>
+                                    <td>{item.modo_id}</td>
+                                    <td><Image width="40" onClick={() => editMapaModo(item.id)} src={'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Edit_icon_%28the_Noun_Project_30184%29.svg/1024px-Edit_icon_%28the_Noun_Project_30184%29.svg.png'}/><Image className="ml-3" width="40" onClick={() => deletMapaModos(item.id)} src={'https://www.flaticon.com/svg/static/icons/svg/1214/1214428.svg'}/></td>
                                 </tr>
                             ))}
                         </tbody>
@@ -835,7 +984,7 @@ const Gerencia = (props) => {
                                 <th>#</th>
                                 <th>Local</th>
                                 <th>Bandeira</th>
-                                <th>Ação</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -844,7 +993,7 @@ const Gerencia = (props) => {
                                     <td>{item.id}</td>
                                     <td>{item.local}</td>
                                     <td><p><Image className="mr-3" width="50" src={item.bandeira} /></p></td>
-                                    <td><Image width="40" onClick={() => deletPaises(item.id)} src={'https://www.flaticon.com/svg/static/icons/svg/1214/1214428.svg'}/></td>
+                                    <td><Image width="40" onClick={() => editPais(item.id)} src={'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Edit_icon_%28the_Noun_Project_30184%29.svg/1024px-Edit_icon_%28the_Noun_Project_30184%29.svg.png'}/><Image className="ml-3" width="40" onClick={() => deletPaises(item.id)} src={'https://www.flaticon.com/svg/static/icons/svg/1214/1214428.svg'}/></td>
                                 </tr>
                             ))}
                         </tbody>
@@ -866,7 +1015,7 @@ const Gerencia = (props) => {
                                 <th>ID Classe</th>
                                 <th>Nome</th>
                                 <th>Foto</th>
-                                <th>Ação</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -877,7 +1026,7 @@ const Gerencia = (props) => {
                                     <td>{item.classe_id}</td>
                                     <td>{item.nome}</td>
                                     <td><p><Image className="mr-3" width="100" src={item.foto} /></p></td>
-                                    <td><Image width="40" onClick={() => deletPersonagens(item.id)} src={'https://www.flaticon.com/svg/static/icons/svg/1214/1214428.svg'}/></td>
+                                    <td><Image width="40" onClick={() => editPersonagem(item.id)} src={'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Edit_icon_%28the_Noun_Project_30184%29.svg/1024px-Edit_icon_%28the_Noun_Project_30184%29.svg.png'}/><Image className="ml-3" width="40" onClick={() => deletPersonagens(item.id)} src={'https://www.flaticon.com/svg/static/icons/svg/1214/1214428.svg'}/></td>
                                 </tr>
                             ))}
                         </tbody>
@@ -886,7 +1035,7 @@ const Gerencia = (props) => {
                 </Tab>
                 <Tab eventKey="secoes" title="Seções">
                     <Row>
-                        <Button className="ml-1 mb-4 justify-content-md-right" variant="dark" onClick={() => setModalSecao(true)}>Novo Secao</Button>
+                        <Button className="ml-1 mb-4 justify-content-md-right" variant="dark" onClick={() => setModalSecao(true)}>Nova Seção</Button>
                         <ModalSecao
                             show={modalSecao}
                             onHide={() => setModalSecao(false)}
@@ -897,7 +1046,7 @@ const Gerencia = (props) => {
                                 <th>#</th>
                                 <th>Nome</th>
                                 <th>Descrição</th>
-                                <th>Ação</th>
+                                <th style={{width:150}}>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -906,7 +1055,7 @@ const Gerencia = (props) => {
                                     <td>{item.id}</td>
                                     <td>{item.nome}</td>
                                     <td>{item.descricao}</td>
-                                    <td><Image width="40" onClick={() => deletSecoes(item.id)} src={'https://www.flaticon.com/svg/static/icons/svg/1214/1214428.svg'}/></td>
+                                    <td><Image width="40" onClick={() => editSecao(item.id)} src={'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Edit_icon_%28the_Noun_Project_30184%29.svg/1024px-Edit_icon_%28the_Noun_Project_30184%29.svg.png'}/><Image className="ml-3" width="40" onClick={() => deletSecoes(item.id)} src={'https://www.flaticon.com/svg/static/icons/svg/1214/1214428.svg'}/></td>
                                 </tr>
                             ))}
                         </tbody>
@@ -924,9 +1073,9 @@ const Gerencia = (props) => {
                         <thead>
                             <tr>
                                 <th>#</th>
-                                <th>Username</th>
+                                <th>Nome</th>
                                 <th>E-mail</th>
-                                <th>Ação</th>
+                                <th>Ações</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -935,7 +1084,7 @@ const Gerencia = (props) => {
                                     <td>{item.id}</td>
                                     <td>{item.username}</td>
                                     <td>{item.email}</td>
-                                    <td><Image width="40" onClick={() => deletUsers(item.id)} src={'https://www.flaticon.com/svg/static/icons/svg/1214/1214428.svg'}/></td>
+                                    <td><Image width="40" onClick={() => editUsuario(item.id)} src={'https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Edit_icon_%28the_Noun_Project_30184%29.svg/1024px-Edit_icon_%28the_Noun_Project_30184%29.svg.png'}/><Image className="ml-3" width="40" onClick={() => deletUsuario(item.id)} src={'https://www.flaticon.com/svg/static/icons/svg/1214/1214428.svg'}/></td>
                                 </tr>
                             ))}
                         </tbody>

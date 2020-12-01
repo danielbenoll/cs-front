@@ -17,7 +17,7 @@ export default() => {
     }, [])
     
 
-    console.log(armamentos)
+    // console.log(armamentos)
 
     return(
         <Pagina titulo="Armamentos">

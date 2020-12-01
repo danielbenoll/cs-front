@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardDeck, Col, Container, Row } from 'react-bootstrap';
+import { Card, Container, Row } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import Cartao from '../../components/Cartao';
 import Pagina from '../../components/Pagina';
 import csApi from '../../services/csApi';
 

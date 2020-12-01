@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route } from 'react-router-dom';
 import Cabecalho from './components/Cabecalho';
 import Armamentos from './pages/Armamentos/Armamentos';
 import ClasseDetalhes from './pages/Classes/ClasseDetalhes';
@@ -54,6 +54,7 @@ export default() => {
                 <PrivateRoute exact path="/secoes" component={Secoes}/>
                 <PrivateRoute exact path="/secoes/:id" component={SecaoDetalhes}/>
                 <PrivateRoute exact path="/gerencia" component={Gerencia}/>
+                <PrivateRoute exact path="/gerencia/:id/armamento" component={Gerencia}/>
             </BrowserRouter>
         </>
     )

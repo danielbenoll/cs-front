@@ -1,6 +1,4 @@
 import csApi from "./csApi"
-import { unMask } from 'remask';
-
 class PaisesService {
   getAll() {
     return csApi.get('paises')

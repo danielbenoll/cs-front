@@ -1,5 +1,4 @@
 import csApi from "./csApi"
-import { unMask } from 'remask';
 
 class ClassesService {
   getAll() {

@@ -1,22 +1,38 @@
 import React, { useState } from 'react';
 import { Button, Card, Col, Container, Form, Image, Modal, Nav, Row, Tab, Table, Tabs } from 'react-bootstrap';
-import { Link, withRouter } from 'react-router-dom';
-import Input from '../components/forms/Input';
-import validator from '../validator/UsuarioValidator';
+import {  withRouter } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import UsuarioService from '../services/UsuarioService';
 import { login } from '../services/auth';
+import Input from '../components/forms/Input';
+import LoginValidator from '../validator/LoginValidator';
+import UsuarioValidator from '../validator/UsuarioValidator';
 
 const Home = (props) => {
 
     const { register, handleSubmit, errors } = useForm()
-    const reference = { register, validator, errors }
+
+    let validator
+
+    let referenceLogin
+    if(LoginValidator){
+        validator = LoginValidator
+        referenceLogin = { register, validator, errors }
+    }
+
+    let referenceUsuario
+    if(UsuarioValidator){
+        validator = UsuarioValidator
+        referenceUsuario = { register, validator, errors }
+    }
+
+    const [dados, setDados] = useState({})
 
     function logar() {
-
+        
         const data={
-            email: document.getElementById('emailLogin').value,
-            password: document.getElementById('senhaLogin').value
+            email: document.getElementById('email').value,
+            password: document.getElementById('password').value
         }
 
         UsuarioService.login(data).then(results => {
@@ -25,13 +41,7 @@ const Home = (props) => {
           props.history.push('/classes')
         })
     }
-    function cadastrar() {
-
-        const data={
-            username: document.getElementById('nome').value,
-            email: document.getElementById('email').value,
-            password: document.getElementById('senha').value
-        }
+    function cadastrar(data) {
 
         UsuarioService.create(data).then(results => {
           console.log(results.data)
@@ -56,53 +66,20 @@ const Home = (props) => {
                 <Tabs defaultActiveKey="entrar" id="uncontrolled-tab-example" >
                     <Tab className="mt-5" eventKey="entrar" title="Entrar">
                         <Form>
-                            <Form.Group as={Row} controlId={'emailLogin'}>
-                                <Form.Label column sm={3} className="text-right">E-mail <span className="text-danger">*</span></Form.Label>
-                                <Col sm={9}>
-                                    <Form.Control type="email" name="email" />
-                                    <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                                </Col>
-                            </Form.Group>
-
-                            <Form.Group as={Row} controlId={'senhaLogin'}>
-                                <Form.Label column sm={3} className="text-right">Senha <span className="text-danger">*</span></Form.Label>
-                                <Col sm={9}>
-                                    <Form.Control type="password" name="senha" />
-                                    <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                                </Col>
-                            </Form.Group>
+                            <Input label="E-mail" name="email" valor={dados.email} referencia={referenceLogin} type="email"/>
+                            <Input label="Senha" name="password" valor={dados.password} referencia={referenceLogin} type="password"/>
 
                             <Modal.Footer className="mt-5">
                                 <Button variant="secondary" onClick={props.onHide}>Fechar</Button>
-                                <Button variant="danger" onClick={handleSubmit(logar)}>Logar</Button>
+                                <Button variant="danger" onClick={() => logar()}>Logar</Button>
                             </Modal.Footer>
                         </Form>
                     </Tab>
                     <Tab className="mt-5" eventKey="cadastrar" title="Cadastrar">
                         <Form>
-                            <Form.Group as={Row} controlId={'nome'}>
-                                <Form.Label column sm={3} className="text-right">Nome <span className="text-danger">*</span></Form.Label>
-                                <Col sm={9}>
-                                    <Form.Control type="text" name="nome" />
-                                    <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                                </Col>
-                            </Form.Group>
-
-                            <Form.Group as={Row} controlId={'email'}>
-                                <Form.Label column sm={3} className="text-right">E-mail <span className="text-danger">*</span></Form.Label>
-                                <Col sm={9}>
-                                    <Form.Control type="email" name="email" />
-                                    <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                                </Col>
-                            </Form.Group>
-
-                            <Form.Group as={Row} controlId={'senha'}>
-                                <Form.Label column sm={3} className="text-right">Senha <span className="text-danger">*</span></Form.Label>
-                                <Col sm={9}>
-                                    <Form.Control type="password" name="senha" />
-                                    <Form.Control.Feedback type='invalid'>Campo Obrigatório</Form.Control.Feedback>
-                                </Col>
-                            </Form.Group>
+                            <Input label="Nome" name="username" valor={dados.username} referencia={referenceUsuario}/>
+                            <Input label="E-mail" name="email" valor={dados.email} referencia={referenceUsuario} type="email"/>
+                            <Input label="Senha" name="password" valor={dados.password} referencia={referenceUsuario} type="password"/>
                             <Modal.Footer className="mt-5">
                                 <Button variant="secondary" onClick={props.onHide}>Fechar</Button>
                                 <Button variant="danger" onClick={handleSubmit(cadastrar)}>Cadastrar</Button>

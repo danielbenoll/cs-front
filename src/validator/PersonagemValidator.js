@@ -1,19 +1,19 @@
 import mensagens from "./mensagens";
 
 export default {
-  pais_idPersonagem: {
+  pais_id: {
     required: mensagens.required,
     maxLength: {value: 10, message: mensagens.maxLength + ' (máximo de 10 caracteres)' },
   },
-  classe_idPersonagem: {
+  classe_id: {
     required: mensagens.required,
     maxLength: {value: 10, message: mensagens.maxLength + ' (máximo de 10 caracteres)' },
   },
-  nomePersonagem: {
+  nome: {
     required: mensagens.required,
-    maxLength: {value: 10, message: mensagens.maxLength + ' (máximo de 10 caracteres)' },
+    maxLength: {value: 45, message: mensagens.maxLength + ' (máximo de 45 caracteres)' },
   },
-  fotoPersonagem: {
-    maxLength: {value: 200, message: mensagens.maxLength + ' (máximo de 200 caracteres)' },
+  foto: {
+    maxLength: {value: 400, message: mensagens.maxLength + ' (máximo de 400 caracteres)' },
   },
 }
