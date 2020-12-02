@@ -22,7 +22,7 @@ export default() => {
         <Pagina titulo="Classes">
             <CardDeck>
                 {classes.map(item => (
-                    <Card>
+                    <Card style={{backgroundColor : "#f0eee1"}}>
                         <Link to={`/classes/${item.id}`} style={{color: 'black'}}>
                             <Card.Img variant="top" src={item.img} />
                             <Card.Body>

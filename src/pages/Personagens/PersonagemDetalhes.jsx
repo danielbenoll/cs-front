@@ -43,7 +43,7 @@ export default(props) => {
                         <Container>
                             <p><strong>Nacionalidade: </strong> <Link to={`/paises/${pais.id}`} style={{color: 'black'}}>{pais.local} - <Image width='50' src={pais.bandeira} rounded /></Link></p>
                             <hr/>
-                            <p><strong>{classe.lado} |</strong> {classe.descricao} </p>
+                            <p><strong>{classe.lado} |</strong> <Link to={`/classes/${classe.id}`} style={{color: 'black'}}>{classe.descricao} </Link></p>
                         </Container>
                         
                     </Col>

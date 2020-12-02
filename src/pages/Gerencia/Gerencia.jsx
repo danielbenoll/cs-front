@@ -160,9 +160,9 @@ const Gerencia = (props) => {
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Select label="ID Classe" name="classe_id" referencia={referenceArmamento} lista={classes} chave="id" description="lado"/>
-                    <Select label="ID Seção" name="secao_id" referencia={referenceArmamento} lista={secoes} chave="id" description="nome"/>
-                    <Select label="ID País" name="pais_id" referencia={referenceArmamento} lista={paises} chave="id" description="local"/>
+                    <Select label="ID Classe" name="classe_id" valor={dados.classe_id} referencia={referenceArmamento} lista={classes} chave="id" description="lado"/>
+                    <Select label="ID Seção" name="secao_id" valor={dados.secao_id} referencia={referenceArmamento} lista={secoes} chave="id" description="nome"/>
+                    <Select label="ID País" name="pais_id" valor={dados.pais_id} referencia={referenceArmamento} lista={paises} chave="id" description="local"/>
                     <Input label="Nome" name="nome" valor={dados.nome} referencia={referenceArmamento}/>
                     <Input label="Descrição" name="descricao" valor={dados.descricao} referencia={referenceArmamento}/>
                     <Input label="Foto" name="foto" valor={dados.foto} referencia={referenceArmamento}/>
@@ -294,7 +294,7 @@ const Gerencia = (props) => {
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Select label="ID Mapa" name="mapa_id" referencia={referenceArmamento} lista={mapas} chave="id" description="nome"/>
+                    <Select label="ID Mapa" name="mapa_id" valor={dados.mapa_id} referencia={referenceArmamento} lista={mapas} chave="id" description="nome"/>
                     <Input label="Foto" name="foto" valor={dados.foto} referencia={referenceFoto}/>
                     <Modal.Footer className="mt-5">
                         <Button variant="secondary" onClick={props.onHide}>Fechar</Button>
@@ -357,7 +357,7 @@ const Gerencia = (props) => {
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Select label="ID País" name="pais_id" referencia={referenceMapa} lista={paises} chave="id" description="local"/>
+                    <Select label="ID País" name="pais_id" valor={dados.pais_id} referencia={referenceMapa} lista={paises} chave="id" description="local"/>
                     <Input label="Nome" name="nome" valor={dados.nome} referencia={referenceMapa}/>
                     <Modal.Footer className="mt-5">
                         <Button variant="secondary" onClick={props.onHide}>Fechar</Button>
@@ -483,8 +483,8 @@ const Gerencia = (props) => {
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Select label="ID Mapa" name="mapa_id" referencia={referenceMapaModo} lista={mapas} chave="id" description="nome"/>
-                    <Select label="ID Modo" name="modo_id" referencia={referenceMapaModo} lista={modos} chave="id" description="modo"/>
+                    <Select label="ID Mapa" name="mapa_id" valor={dados.mapa_id} referencia={referenceMapaModo} lista={mapas} chave="id" description="nome"/>
+                    <Select label="ID Modo" name="modo_id" valor={dados.modo_id} referencia={referenceMapaModo} lista={modos} chave="id" description="modo"/>
                     <Modal.Footer className="mt-5">
                         <Button variant="secondary" onClick={props.onHide}>Fechar</Button>
                         <Button variant="danger" onClick={handleSubmit(cadastrarMapaModo)}>Salvar</Button>
@@ -609,8 +609,8 @@ const Gerencia = (props) => {
             </Modal.Header>
             <Modal.Body>
                 <Form>
-                    <Select label="ID País" name="pais_id" referencia={referencePersonagem} lista={paises} chave="id" description="local"/>
-                    <Select label="ID Classe" name="classe_id" referencia={referencePersonagem} lista={classes} chave="id" description="lado"/>
+                    <Select label="ID País" name="pais_id" valor={dados.pais_id} referencia={referencePersonagem} lista={paises} chave="id" description="local"/>
+                    <Select label="ID Classe" name="classe_id" valor={dados.classe_id} referencia={referencePersonagem} lista={classes} chave="id" description="lado"/>
                     <Input label="Nome" name="nome" valor={dados.nome} referencia={referencePersonagem}/>
                     <Input label="Foto" name="foto" valor={dados.foto} referencia={referencePersonagem}/>
                     <Modal.Footer className="mt-5">

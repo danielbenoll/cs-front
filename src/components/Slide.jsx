@@ -35,7 +35,7 @@ export default(props) => {
                         }
                         >
                             <Card>
-                                <Link to={`/${props.link}/${item.id}`}><Card.Img variant="top" height='150' src={item[foto]} thumbnail /></Link>
+                                <Link to={`/${props.link}/${item.id}`}><Card.Img  style={{backgroundColor : "#f0eee1"}} variant="top" height='150' src={item[foto]} thumbnail /></Link>
                             </Card>
                         </OverlayTrigger>
                     </React.Fragment>

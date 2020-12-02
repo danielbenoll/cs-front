@@ -22,7 +22,7 @@ export default() => {
         <Pagina titulo="Modos">
                 {modos.map(item => (
                     <div>
-                        <Card>
+                        <Card style={{backgroundColor : "#f0eee1"}}>
                             <Card.Body>
                                 <Link to={`/modos/${item.id}`} style={{color: 'black'}}>
                                     <br/>

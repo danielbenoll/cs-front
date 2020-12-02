@@ -54,7 +54,6 @@ export default() => {
                 <PrivateRoute exact path="/secoes" component={Secoes}/>
                 <PrivateRoute exact path="/secoes/:id" component={SecaoDetalhes}/>
                 <PrivateRoute exact path="/gerencia" component={Gerencia}/>
-                <PrivateRoute exact path="/gerencia/:id/armamento" component={Gerencia}/>
             </BrowserRouter>
         </>
     )

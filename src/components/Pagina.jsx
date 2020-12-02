@@ -9,7 +9,7 @@ export default(props) => {
                     <Card style={{backgroundColor : '#f0eee1'}}>
                         <Card.Body>
                             <Card.Title>
-                                <Jumbotron>
+                                <Jumbotron style={{backgroundColor: '#535353', color: "white"}}>
                                     <h1>{props.titulo} <Image width="100" src={props.imagem} rounded /></h1>
                                 </Jumbotron>
                             </Card.Title>

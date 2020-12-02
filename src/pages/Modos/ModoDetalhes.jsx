@@ -54,7 +54,7 @@ export default(props) => {
             {/* {modo.id && */}
                 <Row>
                     <Col xs={12} md={12}>
-                        <p><strong>Descrição: </strong> {modo.descricao}</p>
+                        <p>{modo.descricao}</p>
                     </Col>
                     <Col md={12}>
                         <hr/>

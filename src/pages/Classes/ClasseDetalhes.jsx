@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Col, Image, Row } from 'react-bootstrap';
+import {Col, Container, Image, Row } from 'react-bootstrap';
 import Pagina from '../../components/Pagina';
 import Slide from '../../components/Slide';
 import csApi from '../../services/csApi';
@@ -32,19 +32,13 @@ export default(props) => {
     console.log(personagens)
 
     return (
-        <Pagina titulo={classe.lado}>
+        <Pagina titulo={classe.lado} imagem={classe?.img}>
             {/* {classe.id && */}
                 <Row>
-                    <Col xs={4} md={2} className='pl: 2'>
-                    </Col>
-                    <Col xs={6} md={4} className='pl: 2'>
-                        <Image width='150' src={classe?.img} thumbnail />
-                    </Col>
-                    <Col xs={6} md={6}>
-                        <br/>
-                        <br/>
-                        <br/>
-                        <p><strong>Descrição: </strong> {classe.descricao}</p>
+                    <Col xs={12} md={12}>
+                        <Container>
+                            <p className="justify-content-md-center">{classe.descricao}</p>
+                        </Container>
                     </Col>
                     <Col md={12}>
                         <hr/>

@@ -24,7 +24,7 @@ export default() => {
                 <Container>
                     {secoes.map(item => (
                         <div>
-                            <Card>
+                            <Card style={{backgroundColor : "#f0eee1"}}>
                                 <Card.Body>
                                     <Link to={`/secoes/${item.id}`} style={{color: 'black'}}>
                                         <br/>

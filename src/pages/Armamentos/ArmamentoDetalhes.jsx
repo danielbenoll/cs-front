@@ -37,7 +37,7 @@ export default(props) => {
             {/* {armamento.id && */}
                 <Row>
                     <Col xs={6} md={4} className='pl: 2'>
-                        <Image src={armamento.foto} thumbnail />
+                        <Image style={{backgroundColor : "#f0eee1"}} src={armamento.foto} thumbnail />
                     </Col>
                     <Col xs={6} md={6}>
                         <Container>
